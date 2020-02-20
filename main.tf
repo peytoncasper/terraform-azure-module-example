@@ -1,12 +1,12 @@
 resource "azurerm_resource_group" "web" {
   name     = "module-resources"
-  count = var.num
+  count = var.instance_count
   location = "West US 2"
 }
 
 resource "azurerm_virtual_network" "web" {
   name                = "module-network"
-  count = var.num
+  count = var.instance_count
   address_space       = ["10.0.0.0/16"]
   location            = azurerm_resource_group.web.location
   resource_group_name = azurerm_resource_group.web.name
@@ -14,7 +14,7 @@ resource "azurerm_virtual_network" "web" {
 
 resource "azurerm_subnet" "internal" {
   name                 = "internal"
-  count = var.num
+  count = var.instance_count
   resource_group_name  = azurerm_resource_group.web.name
   virtual_network_name = azurerm_virtual_network.web.name
   address_prefix       = "10.0.2.0/24"
@@ -22,7 +22,7 @@ resource "azurerm_subnet" "internal" {
 
 resource "azurerm_network_interface" "snow" {
   name                = "module-nic"
-  count = var.num
+  count = var.instance_count
   location            = azurerm_resource_group.web.location
   resource_group_name = azurerm_resource_group.web.name
 
@@ -40,7 +40,7 @@ resource "azurerm_virtual_machine" "main" {
   network_interface_ids = [azurerm_network_interface.snow.id]
   vm_size               = var.instance_type
 
-  count = var.num
+  count = var.instance_count
   # Uncomment this line to delete the OS disk automatically when deleting the VM
   # delete_os_disk_on_termination = true
 
