@@ -2,6 +2,7 @@ resource "azurerm_resource_group" "web" {
   name     = "module-resources"
   count = var.instance_count
   location = "West US 2"
+  features {}
 }
 
 resource "azurerm_virtual_network" "web" {
